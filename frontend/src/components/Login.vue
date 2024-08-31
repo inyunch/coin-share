@@ -26,10 +26,8 @@ export default {
           username: this.username,
           password: this.password,
         });
-        alert('Login successful!');
-        // Store the token and redirect to manage groups
         localStorage.setItem('token', response.data.access_token);
-        this.$router.push('/manage-groups');
+        this.$router.push('/home'); // Redirect to home page on successful login
       } catch (error) {
         console.error('Error logging in:', error);
       }
