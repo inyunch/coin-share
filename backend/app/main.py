@@ -1,21 +1,24 @@
 from fastapi import FastAPI, Depends, HTTPException, status
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from . import crud, models, schemas, auth
 from .database import engine, SessionLocal
+from fastapi.middleware.cors import CORSMiddleware
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+# Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8080"],
+    allow_origins=["http://localhost:8080"],  # Update this with your frontend URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# Dependency
 def get_db():
     db = SessionLocal()
     try:
@@ -31,7 +34,7 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return crud.create_user(db=db, user=user)
 
 @app.post("/token")
-def login_for_access_token(form_data: schemas.UserLogin, db: Session = Depends(get_db)):
+def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = auth.authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
@@ -47,6 +50,7 @@ def read_groups(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), 
 def create_group(group: schemas.GroupCreate, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
     return crud.create_group(db=db, group=group)
 
+# New game management endpoints
 @app.get("/games", response_model=list[schemas.Game])
 def read_games(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
     games = crud.get_games(db, skip=skip, limit=limit)
@@ -55,3 +59,17 @@ def read_games(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), c
 @app.post("/games", response_model=schemas.Game)
 def create_game(game: schemas.GameCreate, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
     return crud.create_game(db=db, game=game)
+
+@app.put("/games/{game_id}", response_model=schemas.Game)
+def update_game(game_id: int, game: schemas.GameCreate, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    db_game = crud.get_game(db, game_id=game_id)
+    if db_game is None:
+        raise HTTPException(status_code=404, detail="Game not found")
+    return crud.update_game(db=db, game=db_game, game_update=game)
+
+@app.delete("/games/{game_id}", response_model=schemas.Game)
+def delete_game(game_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    db_game = crud.get_game(db, game_id=game_id)
+    if db_game is None:
+        raise HTTPException(status_code=404, detail="Game not found")
+    return crud.delete_game(db=db, game=db_game)

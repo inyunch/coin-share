@@ -15,6 +15,9 @@
               <router-link class="nav-link" to="/manage-group">Manage Group</router-link>
             </li>
             <li class="nav-item">
+              <router-link class="nav-link" to="/manage-game">Manage Game</router-link>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="#" @click.prevent="logout">Logout</a>
             </li>
           </ul>

@@ -36,8 +36,7 @@ export default {
           username: username.value,
           password: password.value,
         })
-        store.commit('setLoggedIn', true)
-        store.commit('setToken', response.data.access_token)
+        store.dispatch('login', response.data.access_token)
         router.push('/home')
       } catch (error) {
         console.error('Login failed:', error)
