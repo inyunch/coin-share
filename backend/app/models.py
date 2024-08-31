@@ -19,7 +19,7 @@ class User(Base):
 
 class Group(Base):
     __tablename__ = 'groups'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(100), nullable=False)
     code = Column(String(10), nullable=False, unique=True)
     game_id = Column(Integer, ForeignKey('games.id'), nullable=False)
@@ -28,5 +28,5 @@ class Group(Base):
 
 class Game(Base):
     __tablename__ = 'games'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(100), nullable=False)

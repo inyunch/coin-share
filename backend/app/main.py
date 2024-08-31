@@ -4,6 +4,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from . import crud, models, schemas, auth
 from .database import engine, SessionLocal
+from fastapi import Query
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -55,9 +56,19 @@ def read_groups(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), 
     groups = crud.get_groups(db, skip=skip, limit=limit)
     return groups
 
-@app.post("/groups", response_model=schemas.Group)
-def create_group(group: schemas.GroupCreate, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
-    return crud.create_group(db=db, group=group)
+# def get_local_kw(local_kw: str = Query(...)):
+#     return local_kw
+
+@app.post("/games", response_model=schemas.Game)
+def create_game(
+    game: schemas.GameCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(auth.get_current_user)
+):
+    try:
+        return crud.create_game(db=db, game=game)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/games", response_model=list[schemas.Game])
 def read_games(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):

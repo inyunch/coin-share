@@ -19,13 +19,16 @@ def create_user(db: Session, user: schemas.UserCreate):
 def get_groups(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Group).offset(skip).limit(limit).all()
 
-def create_group(db: Session, group: schemas.GroupCreate):
-    db_group = models.Group(**group.dict())
-    db.add(db_group)
-    db.commit()
-    db.refresh(db_group)
-    return db_group
-
+def create_game(db: Session, game: schemas.GameCreate):
+    db_game = models.Game(name=game.name)
+    db.add(db_game)
+    try:
+        db.commit()
+        db.refresh(db_game)
+    except Exception as e:
+        db.rollback()
+        raise Exception(f"Error creating game: {str(e)}")
+    return db_game
 def get_games(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Game).offset(skip).limit(limit).all()
 
