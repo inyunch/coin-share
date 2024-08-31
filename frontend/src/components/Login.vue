@@ -22,14 +22,19 @@ export default {
   methods: {
     async login() {
       try {
-        const response = await axios.post('http://localhost:8000/token', {
+        const response = await axios.post('http://localhost:8001/login', new URLSearchParams({
           username: this.username,
           password: this.password,
+        }), {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
         });
         localStorage.setItem('token', response.data.access_token);
         this.$router.push('/home'); // Redirect to home page on successful login
       } catch (error) {
         console.error('Error logging in:', error);
+        alert('Login failed: ' + (error.response?.data?.detail || 'Unknown error'));
       }
     },
   },
