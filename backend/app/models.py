@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
-from sqlalchemy.orm import relationship, declarative_base
-
-Base = declarative_base()
+from sqlalchemy.orm import relationship
+from .database import Base
 
 class Role:
     ADMIN = 'admin'
@@ -11,11 +10,11 @@ class Role:
 
 class User(Base):
     __tablename__ = 'users'
-    id = Column(Integer, primary_key=True, autoincrement=True)  # Ensure autoincrement=True
+    id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String(100), unique=True, nullable=False)
     password_hash = Column(String(255), nullable=False)
     name = Column(String(255), nullable=False)
-    role = Column(String(50), nullable=False, default='user')
+    role = Column(String(50), nullable=False, default=Role.USER)
     group_id = Column(Integer, ForeignKey('groups.id'), nullable=True)
 
 class Group(Base):

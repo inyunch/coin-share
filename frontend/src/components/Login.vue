@@ -1,42 +1,51 @@
 <template>
-  <div>
-    <h1>Login</h1>
+  <div class="login">
+    <h2>Login</h2>
     <form @submit.prevent="login">
-      <input v-model="username" placeholder="Username" required />
-      <input v-model="password" type="password" placeholder="Password" required />
-      <button type="submit">Login</button>
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" class="form-control" id="username" v-model="username" required>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" v-model="password" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Login</button>
     </form>
+    <p class="mt-3">Don't have an account? <router-link to="/register">Register</router-link></p>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import { ref } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
 
 export default {
-  data() {
-    return {
-      username: '',
-      password: '',
-    };
-  },
-  methods: {
-    async login() {
+  name: 'Login',
+  setup() {
+    const store = useStore()
+    const router = useRouter()
+    const username = ref('')
+    const password = ref('')
+
+    const login = async () => {
       try {
-        const response = await axios.post('http://localhost:8001/login', new URLSearchParams({
-          username: this.username,
-          password: this.password,
-        }), {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        });
-        localStorage.setItem('token', response.data.access_token);
-        this.$router.push('/home'); // Redirect to home page on successful login
+        const response = await axios.post('http://localhost:8001/token', {
+          username: username.value,
+          password: password.value,
+        })
+        store.commit('setLoggedIn', true)
+        store.commit('setToken', response.data.access_token)
+        router.push('/home')
       } catch (error) {
-        console.error('Error logging in:', error);
-        alert('Login failed: ' + (error.response?.data?.detail || 'Unknown error'));
+        console.error('Login failed:', error)
+        alert('Login failed. Please check your credentials.')
       }
-    },
-  },
-};
+    }
+
+    return { username, password, login }
+  }
+}
 </script>
