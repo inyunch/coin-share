@@ -2,21 +2,21 @@
   <div class="register">
     <h2>Register</h2>
     <form @submit.prevent="register">
-      <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" class="form-control" id="username" v-model="username" required>
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input v-model="username" type="text" class="form-control" id="username" required>
       </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" v-model="password" required>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input v-model="password" type="password" class="form-control" id="password" required>
       </div>
-      <div class="mb-3">
-        <label for="name" class="form-label">Full Name</label>
-        <input type="text" class="form-control" id="name" v-model="name" required>
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input v-model="name" type="text" class="form-control" id="name" required>
       </div>
-      <div class="mb-3">
-        <label for="role" class="form-label">Role</label>
-        <select class="form-select" id="role" v-model="role">
+      <div class="form-group">
+        <label for="role">Role</label>
+        <select v-model="role" class="form-control" id="role">
           <option value="user">User</option>
           <option value="group_admin">Group Admin</option>
           <option value="accountant">Accountant</option>
@@ -25,7 +25,7 @@
       </div>
       <button type="submit" class="btn btn-primary">Register</button>
     </form>
-    <p class="mt-3">Already have an account? <router-link to="/login">Login</router-link></p>
+    <p>Already have an account? <router-link to="/">Login</router-link></p>
   </div>
 </template>
 
@@ -49,9 +49,9 @@ export default {
           username: username.value,
           password: password.value,
           name: name.value,
-          role: role.value,
+          role: role.value
         })
-        router.push('/login')
+        router.push('/')
       } catch (error) {
         console.error('Registration failed:', error)
         alert('Registration failed. Please try again.')

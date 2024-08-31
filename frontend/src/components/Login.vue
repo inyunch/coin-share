@@ -2,17 +2,17 @@
   <div class="login">
     <h2>Login</h2>
     <form @submit.prevent="login">
-      <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" class="form-control" id="username" v-model="username" required>
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input v-model="username" type="text" class="form-control" id="username" required>
       </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" v-model="password" required>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input v-model="password" type="password" class="form-control" id="password" required>
       </div>
       <button type="submit" class="btn btn-primary">Login</button>
     </form>
-    <p class="mt-3">Don't have an account? <router-link to="/register">Register</router-link></p>
+    <p>Don't have an account? <router-link to="/register">Register</router-link></p>
   </div>
 </template>
 
@@ -20,7 +20,6 @@
 import { ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import axios from 'axios'
 
 export default {
   name: 'Login',
@@ -32,15 +31,18 @@ export default {
 
     const login = async () => {
       try {
-        const response = await axios.post('http://localhost:8001/token', {
+        const success = await store.dispatch('login', {
           username: username.value,
-          password: password.value,
+          password: password.value
         })
-        store.dispatch('login', response.data.access_token)
-        router.push('/home')
+        if (success) {
+          router.push('/home')
+        } else {
+          alert('Login failed. Please check your credentials.')
+        }
       } catch (error) {
-        console.error('Login failed:', error)
-        alert('Login failed. Please check your credentials.')
+        console.error('Login error:', error)
+        alert('An error occurred during login. Please try again.')
       }
     }
 

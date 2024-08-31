@@ -3,14 +3,10 @@ import axios from 'axios'
 
 export default createStore({
   state: {
-    isLoggedIn: false,
-    token: null,
+    token: localStorage.getItem('token') || null,
     user: null
   },
   mutations: {
-    setLoggedIn(state, value) {
-      state.isLoggedIn = value
-    },
     setToken(state, token) {
       state.token = token
     },
@@ -19,41 +15,29 @@ export default createStore({
     }
   },
   actions: {
-    login({ commit }, token) {
-      commit('setLoggedIn', true)
-      commit('setToken', token)
-      localStorage.setItem('token', token)
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-    },
-    logout({ commit }) {
-      commit('setLoggedIn', false)
-      commit('setToken', null)
-      commit('setUser', null)
-      localStorage.removeItem('token')
-      delete axios.defaults.headers.common['Authorization']
-    },
-    initializeAuth({ commit, dispatch }) {
-      const token = localStorage.getItem('token')
-      if (token) {
-        commit('setLoggedIn', true)
+    async login({ commit }, credentials) {
+      try {
+        const response = await axios.post('http://localhost:8001/token', new URLSearchParams({
+          username: credentials.username,
+          password: credentials.password
+        }), {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        })
+        const token = response.data.access_token
+        localStorage.setItem('token', token)
         commit('setToken', token)
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-        dispatch('fetchUser')
+        return true
+      } catch (error) {
+        console.error('Login failed:', error.response ? error.response.data : error.message)
+        return false
       }
     },
-    async fetchUser({ commit }) {
-      try {
-        const response = await axios.get('http://localhost:8001/users/me')
-        commit('setUser', response.data)
-      } catch (error) {
-        console.error('Failed to fetch user:', error)
-        // If fetching user fails, log out
-        this.dispatch('logout')
-      }
-    }
+    // ... other actions ...
   },
   getters: {
-    isLoggedIn: state => state.isLoggedIn,
-    user: state => state.user
+    isLoggedIn: state => !!state.token
   }
 })

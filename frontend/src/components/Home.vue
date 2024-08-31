@@ -1,12 +1,21 @@
 <template>
   <div class="home">
     <h1>Welcome to Coin Share</h1>
-    <p>You are now logged in. Use the navigation bar above to manage your groups or access other features.</p>
+    <p>You are logged in as {{ user ? user.name : 'Guest' }}</p>
   </div>
 </template>
 
 <script>
+import { computed } from 'vue'
+import { useStore } from 'vuex'
+
 export default {
-  name: 'Home'
+  name: 'Home',
+  setup() {
+    const store = useStore()
+    const user = computed(() => store.state.user)
+
+    return { user }
+  }
 }
 </script>

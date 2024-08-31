@@ -1,7 +1,4 @@
 
-#
-# SECRET_KEY = "543aad7006843a4c317e703cef7e08d1e0a3d3fa741e95f5673efc2939da635d"
-
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -24,7 +21,7 @@ def verify_password(plain_password, hashed_password):
 def get_password_hash(password):
     return pwd_context.hash(password)
 
-def authenticate_user(db: Session, username: str, password: str):
+def authenticate_user(db, username: str, password: str):
     user = crud.get_user_by_username(db, username)
     if not user:
         return False
@@ -56,5 +53,3 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     if user is None:
         raise credentials_exception
     return user
-
-

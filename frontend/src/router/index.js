@@ -4,24 +4,19 @@ import Login from '../components/Login.vue'
 import Register from '../components/Register.vue'
 import ManageGroup from '../components/ManageGroup.vue'
 import ManageGame from '../components/ManageGame.vue'
-import AddGame from '../components/AddGame.vue'
 import store from '../store'
 
 const routes = [
   {
     path: '/',
-    redirect: '/login'
+    name: 'Login',
+    component: Login
   },
   {
     path: '/home',
     name: 'Home',
     component: Home,
     meta: { requiresAuth: true }
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login
   },
   {
     path: '/register',
@@ -39,12 +34,6 @@ const routes = [
     name: 'ManageGame',
     component: ManageGame,
     meta: { requiresAuth: true }
-  },
-  {
-    path: '/add-game',
-    name: 'AddGame',
-    component: AddGame,
-    meta: { requiresAuth: true }
   }
 ]
 
@@ -55,8 +44,8 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (!store.state.isLoggedIn) {
-      next('/login')
+    if (!store.getters.isLoggedIn) {
+      next('/')
     } else {
       next()
     }

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" v-if="isLoggedIn">
+    <nav v-if="isLoggedIn" class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">Coin Share</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,9 +24,7 @@
         </div>
       </div>
     </nav>
-    <div class="container mt-4">
-      <router-view></router-view>
-    </div>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -40,12 +38,11 @@ export default {
   setup() {
     const store = useStore()
     const router = useRouter()
-    const isLoggedIn = computed(() => store.state.isLoggedIn)
+    const isLoggedIn = computed(() => store.getters.isLoggedIn)
 
     const logout = () => {
-      store.commit('setLoggedIn', false)
-      store.commit('setToken', null)
-      router.push('/login')
+      store.dispatch('logout')
+      router.push('/')
     }
 
     return { isLoggedIn, logout }

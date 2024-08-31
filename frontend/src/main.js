@@ -10,7 +10,4 @@ const app = createApp(App)
 app.use(store)
 app.use(router)
 
-// Initialize auth state
-store.dispatch('initializeAuth')
-
 app.mount('#app')

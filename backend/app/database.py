@@ -2,7 +2,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# Update this line with your PostgreSQL connection string
 SQLALCHEMY_DATABASE_URL = "postgresql://fastapi_vue_user:fastapi_vue_password@localhost:5432/fastapi_vue_dev"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
