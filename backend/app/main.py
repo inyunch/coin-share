@@ -27,6 +27,10 @@ def get_db():
     finally:
         db.close()
 
+@app.get("/test")
+async def test_endpoint():
+    return {"message": "Server is running"}
+
 @app.post("/token", response_model=schemas.Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = auth.authenticate_user(db, form_data.username, form_data.password)
@@ -56,19 +60,10 @@ def read_groups(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), 
     groups = crud.get_groups(db, skip=skip, limit=limit)
     return groups
 
-# def get_local_kw(local_kw: str = Query(...)):
-#     return local_kw
 
 @app.post("/games", response_model=schemas.Game)
-def create_game(
-    game: schemas.GameCreate,
-    db: Session = Depends(get_db),
-    current_user: models.User = Depends(auth.get_current_user)
-):
-    try:
-        return crud.create_game(db=db, game=game)
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+def create_game(game: schemas.GameCreate, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
+    return crud.create_game(db=db, game=game)
 
 @app.get("/games", response_model=list[schemas.Game])
 def read_games(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user: models.User = Depends(auth.get_current_user)):
