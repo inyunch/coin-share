@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <nav v-if="isLoggedIn" class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" v-if="isLoggedIn">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">Coin Share</a>
+        <router-link class="navbar-brand" to="/">Coin Share</router-link>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -42,7 +42,7 @@ export default {
 
     const logout = () => {
       store.dispatch('logout')
-      router.push('/')
+      router.push('/login')
     }
 
     return { isLoggedIn, logout }

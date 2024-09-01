@@ -1,26 +1,20 @@
-from pydantic import BaseModel, constr
-class Token(BaseModel):
-    access_token: str
-    token_type: str
+from pydantic import BaseModel
+from typing import Optional, List
 
 class UserBase(BaseModel):
     username: str
     name: str
-    role: str = 'user'
+    role: str
 
 class UserCreate(UserBase):
     password: str
 
 class User(UserBase):
     id: int
-    group_id: int = None
+    group_id: Optional[int] = None
 
     class Config:
         orm_mode = True
-
-class UserLogin(BaseModel):
-    username: str
-    password: str
 
 class GroupBase(BaseModel):
     name: str
@@ -32,6 +26,7 @@ class GroupCreate(GroupBase):
 
 class Group(GroupBase):
     id: int
+    users: List[User] = []
 
     class Config:
         orm_mode = True
@@ -44,6 +39,11 @@ class GameCreate(GameBase):
 
 class Game(GameBase):
     id: int
+    groups: List[Group] = []
 
     class Config:
         orm_mode = True
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str

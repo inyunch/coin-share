@@ -1,12 +1,11 @@
-
 from datetime import datetime, timedelta
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-from . import crud, models
-from .database import SessionLocal
+from . import crud, models, schemas
+from .database import get_db
 
 SECRET_KEY = "543aad7006843a4c317e703cef7e08d1e0a3d3fa741e95f5673efc2939da635d"
 ALGORITHM = "HS256"
@@ -21,7 +20,7 @@ def verify_password(plain_password, hashed_password):
 def get_password_hash(password):
     return pwd_context.hash(password)
 
-def authenticate_user(db, username: str, password: str):
+def authenticate_user(db: Session, username: str, password: str):
     user = crud.get_user_by_username(db, username)
     if not user:
         return False
@@ -36,7 +35,7 @@ def create_access_token(data: dict):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(SessionLocal)):
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -47,12 +46,19 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         username: str = payload.get("sub")
         if username is None:
             raise credentials_exception
-        print(f"Decoded username from token: {username}")
-    except JWTError as e:
-        print(f"JWT decoding error: {str(e)}")
+    except JWTError:
         raise credentials_exception
     user = crud.get_user_by_username(db, username=username)
     if user is None:
-        print(f"No user found for username: {username}")
         raise credentials_exception
     return user
+
+def check_admin(current_user: models.User = Depends(get_current_user)):
+    if current_user.role != models.Role.ADMIN:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Admin access required")
+    return current_user
+
+def check_group_admin(current_user: models.User = Depends(get_current_user)):
+    if current_user.role not in [models.Role.ADMIN, models.Role.GROUP_ADMIN]:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Group admin access required")
+    return current_user

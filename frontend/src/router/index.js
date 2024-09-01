@@ -1,22 +1,22 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../components/Home.vue'
-import Login from '../components/Login.vue'
-import Register from '../components/Register.vue'
-import ManageGroup from '../components/ManageGroup.vue'
-import ManageGame from '../components/ManageGame.vue'
+import Home from '../views/Home.vue'
+import Login from '../views/Login.vue'
+import Register from '../views/Register.vue'
+import ManageGame from '../views/ManageGame.vue'
+import ManageGroup from '../views/ManageGroup.vue'
 import store from '../store'
 
 const routes = [
   {
     path: '/',
-    name: 'Login',
-    component: Login
-  },
-  {
-    path: '/home',
     name: 'Home',
     component: Home,
     meta: { requiresAuth: true }
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
   },
   {
     path: '/register',
@@ -24,15 +24,15 @@ const routes = [
     component: Register
   },
   {
-    path: '/manage-group',
-    name: 'ManageGroup',
-    component: ManageGroup,
-    meta: { requiresAuth: true }
-  },
-  {
     path: '/manage-game',
     name: 'ManageGame',
     component: ManageGame,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/manage-group',
+    name: 'ManageGroup',
+    component: ManageGroup,
     meta: { requiresAuth: true }
   }
 ]
@@ -45,7 +45,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!store.getters.isLoggedIn) {
-      next('/')
+      next('/login')
     } else {
       next()
     }

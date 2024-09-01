@@ -16,19 +16,6 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.refresh(db_user)
     return db_user
 
-def get_groups(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(models.Group).offset(skip).limit(limit).all()
-
-def create_game(db: Session, game: schemas.GameCreate):
-    db_game = models.Game(name=game.name)
-    db.add(db_game)
-    try:
-        db.commit()
-        db.refresh(db_game)
-    except Exception as e:
-        db.rollback()
-        raise Exception(f"Error creating game: {str(e)}")
-    return db_game
 def get_games(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Game).offset(skip).limit(limit).all()
 
@@ -38,3 +25,27 @@ def create_game(db: Session, game: schemas.GameCreate):
     db.commit()
     db.refresh(db_game)
     return db_game
+
+def delete_game(db: Session, game_id: int):
+    game = db.query(models.Game).filter(models.Game.id == game_id).first()
+    if game:
+        db.delete(game)
+        db.commit()
+    return game
+
+def get_groups(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(models.Group).offset(skip).limit(limit).all()
+
+def create_group(db: Session, group: schemas.GroupCreate):
+    db_group = models.Group(**group.dict())
+    db.add(db_group)
+    db.commit()
+    db.refresh(db_group)
+    return db_group
+
+def delete_group(db: Session, group_id: int):
+    group = db.query(models.Group).filter(models.Group.id == group_id).first()
+    if group:
+        db.delete(group)
+        db.commit()
+    return group
