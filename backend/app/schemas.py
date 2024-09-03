@@ -18,15 +18,14 @@ class User(UserBase):
 
 class GroupBase(BaseModel):
     name: str
-    code: str
     game_id: int
 
 class GroupCreate(GroupBase):
-    pass
+    pass  # The 'code' field should not be here
 
 class Group(GroupBase):
     id: int
-    users: List[User] = []
+    code: str
 
     class Config:
         orm_mode = True

@@ -19,14 +19,22 @@ class User(Base):
 
 class Group(Base):
     __tablename__ = 'groups'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(100), nullable=False)
-    code = Column(String(10), nullable=False, unique=True)
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(100), index=True)
+    code = Column(String(10), nullable=True, unique=True)
     game_id = Column(Integer, ForeignKey('games.id'), nullable=False)
-    users = relationship('User', backref='group', lazy=True)
-    game = relationship('Game', backref='groups', lazy=True)
+
+    # Define the many-to-one relationship with Game
+    game = relationship("Game", back_populates="groups")
+    users = relationship('User', backref='groups', lazy=True)
+
 
 class Game(Base):
     __tablename__ = 'games'
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(100), nullable=False)
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)
+
+    # Define the one-to-many relationship with Group
+    groups = relationship("Group", back_populates="game")

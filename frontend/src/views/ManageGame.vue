@@ -1,32 +1,63 @@
 <template>
-  <div class="manage-game">
-    <h2>Manage Games</h2>
-    <form @submit.prevent="createGame" class="mb-4" v-if="isAdmin">
-      <div class="form-group">
-        <label for="gameName">Game Name</label>
-        <input v-model="newGame.name" type="text" class="form-control" id="gameName" required>
+  <div class="container mt-4">
+    <h1 class="mb-4">Manage Games</h1>
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Existing Games</h5>
+        <button class="btn btn-primary" @click="showModal = true">Create Game</button>
       </div>
-      <button type="submit" class="btn btn-primary mt-2">Create Game</button>
-    </form>
-    <div v-if="error" class="alert alert-danger" role="alert">
-      {{ error }}
-    </div>
-    <div v-if="message" class="alert alert-success" role="alert">
-      {{ message }}
-    </div>
-    <h3>Existing Games</h3>
-    <ul class="list-group">
-      <li v-for="game in games" :key="game.id" class="list-group-item d-flex justify-content-between align-items-center">
-        <span v-if="!isEditing(game.id)">{{ game.name }}</span>
-        <input v-else v-model="editGameName" type="text" class="form-control" />
-        <div>
-          <button @click="startEditing(game)" class="btn btn-secondary btn-sm" v-if="isAdmin && !isEditing(game.id)">Edit</button>
-          <button @click="updateGame(game.id)" class="btn btn-success btn-sm" v-if="isAdmin && isEditing(game.id)">Save</button>
-          <button @click="cancelEditing" class="btn btn-warning btn-sm" v-if="isAdmin && isEditing(game.id)">Cancel</button>
-          <button @click="deleteGame(game.id)" class="btn btn-danger btn-sm" v-if="isAdmin">Delete</button>
+      <div class="card-body">
+        <div v-if="error" class="alert alert-danger" role="alert">
+          {{ error }}
         </div>
-      </li>
-    </ul>
+        <div v-if="message" class="alert alert-success" role="alert">
+          {{ message }}
+        </div>
+        <table class="table table-striped table-hover">
+          <thead class="thead-light">
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="game in games" :key="game.id">
+              <td>{{ game.id }}</td>
+              <td>
+                <span v-if="!isEditing(game.id)">{{ game.name }}</span>
+                <input v-else v-model="editGameName" type="text" class="form-control form-control-sm" />
+              </td>
+              <td>
+                <button @click="startEditing(game)" class="btn btn-sm btn-outline-info" v-if="isAdmin && !isEditing(game.id)">Edit</button>
+                <button @click="updateGame(game.id)" class="btn btn-sm btn-outline-success" v-if="isAdmin && isEditing(game.id)">Save</button>
+                <button @click="cancelEditing" class="btn btn-sm btn-outline-secondary" v-if="isAdmin && isEditing(game.id)">Cancel</button>
+                <button @click="deleteGame(game.id)" class="btn btn-sm btn-outline-danger" v-if="isAdmin && !isEditing(game.id)">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Create Game Modal -->
+    <div v-if="showModal" class="modal-overlay">
+      <div class="modal-container">
+        <div class="modal-content">
+          <h3 class="modal-title">Add New Game</h3>
+          <form @submit.prevent="createGame">
+            <div class="form-group">
+              <label for="gameName">Game Name</label>
+              <input v-model="newGame.name" type="text" class="form-control" id="gameName" required>
+            </div>
+            <div class="modal-actions">
+              <button type="submit" class="btn btn-primary">Create Game</button>
+              <button type="button" class="btn btn-secondary" @click="showModal = false">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -45,8 +76,11 @@ export default {
     const editingGameId = ref(null)
     const error = ref(null)
     const message = ref(null)
+    const showModal = ref(false)
 
     const isAdmin = computed(() => store.state.user && store.state.user.role === 'admin')
+
+    const isEditing = (gameId) => editingGameId.value === gameId
 
     const fetchGames = async () => {
       try {
@@ -80,6 +114,7 @@ export default {
         newGame.value.name = ''
         error.value = null
         await fetchGames()
+        showModal.value = false
       } catch (err) {
         console.error('Failed to create game:', err)
         error.value = err.response && err.response.data && err.response.data.detail
@@ -113,8 +148,7 @@ export default {
         })
         console.log('Game updated:', response.data)
         message.value = 'Game updated successfully!'
-        editingGameId.value = null
-        error.value = null
+        cancelEditing()
         await fetchGames()
       } catch (err) {
         console.error('Failed to update game:', err)
@@ -148,8 +182,6 @@ export default {
       }
     }
 
-    const isEditing = (gameId) => editingGameId.value === gameId
-
     onMounted(() => {
       fetchGames()
     })
@@ -164,30 +196,70 @@ export default {
       deleteGame,
       startEditing,
       cancelEditing,
-      isEditing,
       error,
       message,
-      isAdmin
+      isAdmin,
+      isEditing,
+      showModal
     }
   }
 }
 </script>
 
 <style scoped>
-.manage-game {
-  max-width: 600px;
-  margin: 0 auto;
+.card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.form-group {
-  margin-bottom: 1rem;
+.btn {
+  margin-right: 5px;
 }
 
-.list-group-item {
-  margin-bottom: 0.5rem;
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-.btn-danger, .btn-secondary, .btn-success, .btn-warning {
+.modal-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content {
+  padding: 20px;
+}
+
+.modal-title {
+  margin-bottom: 20px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.modal-actions button {
   margin-left: 10px;
+}
+
+.table {
+  margin-bottom: 0;
+}
+
+.table th {
+  border-top: none;
 }
 </style>
