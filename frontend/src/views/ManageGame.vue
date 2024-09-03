@@ -17,8 +17,14 @@
     <h3>Existing Games</h3>
     <ul class="list-group">
       <li v-for="game in games" :key="game.id" class="list-group-item d-flex justify-content-between align-items-center">
-        {{ game.name }}
-        <button @click="deleteGame(game.id)" class="btn btn-danger btn-sm" v-if="isAdmin">Delete</button>
+        <span v-if="!isEditing(game.id)">{{ game.name }}</span>
+        <input v-else v-model="editGameName" type="text" class="form-control" />
+        <div>
+          <button @click="startEditing(game)" class="btn btn-secondary btn-sm" v-if="isAdmin && !isEditing(game.id)">Edit</button>
+          <button @click="updateGame(game.id)" class="btn btn-success btn-sm" v-if="isAdmin && isEditing(game.id)">Save</button>
+          <button @click="cancelEditing" class="btn btn-warning btn-sm" v-if="isAdmin && isEditing(game.id)">Cancel</button>
+          <button @click="deleteGame(game.id)" class="btn btn-danger btn-sm" v-if="isAdmin">Delete</button>
+        </div>
       </li>
     </ul>
   </div>
@@ -35,6 +41,8 @@ export default {
     const store = useStore()
     const games = ref([])
     const newGame = ref({ name: '' })
+    const editGameName = ref('')
+    const editingGameId = ref(null)
     const error = ref(null)
     const message = ref(null)
 
@@ -81,6 +89,42 @@ export default {
       }
     }
 
+    const startEditing = (game) => {
+      editingGameId.value = game.id
+      editGameName.value = game.name
+    }
+
+    const cancelEditing = () => {
+      editingGameId.value = null
+      editGameName.value = ''
+    }
+
+    const updateGame = async (gameId) => {
+      if (!isAdmin.value) {
+        error.value = 'You do not have permission to update games.'
+        return
+      }
+      try {
+        const response = await axios.put(`http://localhost:8000/games/${gameId}`, { name: editGameName.value }, {
+          headers: {
+            'Authorization': `Bearer ${store.state.token}`,
+            'Content-Type': 'application/json'
+          }
+        })
+        console.log('Game updated:', response.data)
+        message.value = 'Game updated successfully!'
+        editingGameId.value = null
+        error.value = null
+        await fetchGames()
+      } catch (err) {
+        console.error('Failed to update game:', err)
+        error.value = err.response && err.response.data && err.response.data.detail
+          ? err.response.data.detail
+          : 'Failed to update game. Please try again.'
+        message.value = null
+      }
+    }
+
     const deleteGame = async (gameId) => {
       if (!isAdmin.value) {
         error.value = 'You do not have permission to delete games.'
@@ -104,6 +148,8 @@ export default {
       }
     }
 
+    const isEditing = (gameId) => editingGameId.value === gameId
+
     onMounted(() => {
       fetchGames()
     })
@@ -111,8 +157,14 @@ export default {
     return {
       games,
       newGame,
+      editGameName,
+      editingGameId,
       createGame,
+      updateGame,
       deleteGame,
+      startEditing,
+      cancelEditing,
+      isEditing,
       error,
       message,
       isAdmin
@@ -135,7 +187,7 @@ export default {
   margin-bottom: 0.5rem;
 }
 
-.btn-danger {
+.btn-danger, .btn-secondary, .btn-success, .btn-warning {
   margin-left: 10px;
 }
 </style>

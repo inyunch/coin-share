@@ -62,7 +62,17 @@ def read_games(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), c
 
 @app.post("/games", response_model=schemas.Game)
 def create_game(game: schemas.GameCreate, db: Session = Depends(get_db), current_user: models.User = Depends(auth.check_admin)):
-    return crud.create_game(db=db, game=game)
+    new_game = crud.create_game(db=db, game=game)
+    if new_game is None:
+        raise HTTPException(status_code=400, detail="Failed to create game")
+    return new_game
+
+@app.put("/games/{game_id}", response_model=schemas.Game)
+def update_game(game_id: int, game: schemas.GameCreate, db: Session = Depends(get_db), current_user: models.User = Depends(auth.check_admin)):
+    updated_game = crud.update_game(db, game_id=game_id, game=game)
+    if updated_game is None:
+        raise HTTPException(status_code=404, detail="Game not found")
+    return updated_game
 
 @app.delete("/games/{game_id}", response_model=schemas.Game)
 def delete_game(game_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(auth.check_admin)):
