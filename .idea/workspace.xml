@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d78f6b01-d852-4111-baa7-0a150a043b3f" name="Changes" comment="+ add the settings to manage the page">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.vue" afterDir="false" />
-    </list>
+    <list default="true" id="d78f6b01-d852-4111-baa7-0a150a043b3f" name="Changes" comment="+ add the css style" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -160,7 +156,15 @@
       <option name="project" value="LOCAL" />
       <updated>1725457854758</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="+ add the css style">
+      <option name="closed" value="true" />
+      <created>1725482412526</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1725482412526</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -183,6 +187,7 @@
     <MESSAGE value="+ modify ManageGame.vue with crud" />
     <MESSAGE value="+ modify the crud and ui for managegroup and managegame" />
     <MESSAGE value="+ add the settings to manage the page" />
-    <option name="LAST_COMMIT_MESSAGE" value="+ add the settings to manage the page" />
+    <MESSAGE value="+ add the css style" />
+    <option name="LAST_COMMIT_MESSAGE" value="+ add the css style" />
   </component>
 </project>
