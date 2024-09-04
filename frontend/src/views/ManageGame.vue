@@ -62,129 +62,115 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue'
-import axios from 'axios'
-import { useStore } from 'vuex'
+import { ref, computed, onMounted } from 'vue';
+import api from '@/services/api';
+import { useStore } from 'vuex';
 
 export default {
   name: 'ManageGame',
   setup() {
-    const store = useStore()
-    const games = ref([])
-    const newGame = ref({ name: '' })
-    const editGameName = ref('')
-    const editingGameId = ref(null)
-    const error = ref(null)
-    const message = ref(null)
-    const showModal = ref(false)
+    const store = useStore();
+    const games = ref([]);
+    const newGame = ref({ name: '' });
+    const editGameName = ref('');
+    const editingGameId = ref(null);
+    const error = ref(null);
+    const message = ref(null);
+    const showModal = ref(false);
 
-    const isAdmin = computed(() => store.state.user && store.state.user.role === 'admin')
+    const isAdmin = computed(() => store.state.user && store.state.user.role === 'admin');
 
-    const isEditing = (gameId) => editingGameId.value === gameId
+    const isEditing = (gameId) => editingGameId.value === gameId;
 
     const fetchGames = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/games', {
-          headers: { Authorization: `Bearer ${store.state.token}` }
-        })
-        games.value = response.data
-        error.value = null
+        const response = await api.get('/games');
+        games.value = response.data;
+        error.value = null;
       } catch (err) {
-        console.error('Failed to fetch games:', err)
-        error.value = err.response && err.response.data && err.response.data.detail
+        console.error('Failed to fetch games:', err);
+        error.value = (err.response && err.response.data && err.response.data.detail)
           ? err.response.data.detail
-          : 'Failed to fetch games. Please try again.'
+          : 'Failed to fetch games. Please try again.';
       }
-    }
+    };
 
     const createGame = async () => {
       if (!isAdmin.value) {
-        error.value = 'You do not have permission to create games.'
-        return
+        error.value = 'You do not have permission to create games.';
+        return;
       }
       try {
-        const response = await axios.post('http://localhost:8000/games', newGame.value, {
-          headers: {
-            'Authorization': `Bearer ${store.state.token}`,
-            'Content-Type': 'application/json'
-          }
-        })
-        console.log('Game created:', response.data)
-        message.value = 'Game created successfully!'
-        newGame.value.name = ''
-        error.value = null
-        await fetchGames()
-        showModal.value = false
+        const response = await api.post('/games', newGame.value);
+        console.log('Game created:', response.data);
+        message.value = 'Game created successfully!';
+        newGame.value.name = '';
+        error.value = null;
+        await fetchGames();
+        showModal.value = false;
       } catch (err) {
-        console.error('Failed to create game:', err)
-        error.value = err.response && err.response.data && err.response.data.detail
+        console.error('Failed to create game:', err);
+        error.value = (err.response && err.response.data && err.response.data.detail)
           ? err.response.data.detail
-          : 'Failed to create game. Please try again.'
-        message.value = null
+          : 'Failed to create game. Please try again.';
+        message.value = null;
       }
-    }
+    };
 
     const startEditing = (game) => {
-      editingGameId.value = game.id
-      editGameName.value = game.name
-    }
+      editingGameId.value = game.id;
+      editGameName.value = game.name;
+    };
 
     const cancelEditing = () => {
-      editingGameId.value = null
-      editGameName.value = ''
-    }
+      editingGameId.value = null;
+      editGameName.value = '';
+    };
 
     const updateGame = async (gameId) => {
       if (!isAdmin.value) {
-        error.value = 'You do not have permission to update games.'
-        return
+        error.value = 'You do not have permission to update games.';
+        return;
       }
       try {
-        const response = await axios.put(`http://localhost:8000/games/${gameId}`, { name: editGameName.value }, {
-          headers: {
-            'Authorization': `Bearer ${store.state.token}`,
-            'Content-Type': 'application/json'
-          }
-        })
-        console.log('Game updated:', response.data)
-        message.value = 'Game updated successfully!'
-        cancelEditing()
-        await fetchGames()
+        const response = await api.put(`/games/${gameId}`, { name: editGameName.value });
+        console.log('Game updated:', response.data);
+        message.value = 'Game updated successfully!';
+        cancelEditing();
+        await fetchGames();
       } catch (err) {
-        console.error('Failed to update game:', err)
-        error.value = err.response && err.response.data && err.response.data.detail
+        console.error('Failed to update game:', err);
+        error.value = (err.response && err.response.data && err.response.data.detail)
           ? err.response.data.detail
-          : 'Failed to update game. Please try again.'
-        message.value = null
+          : 'Failed to update game. Please try again.';
+        message.value = null;
       }
-    }
+    };
 
     const deleteGame = async (gameId) => {
       if (!isAdmin.value) {
-        error.value = 'You do not have permission to delete games.'
-        return
+        error.value = 'You do not have permission to delete games.';
+        return;
       }
       if (confirm('Are you sure you want to delete this game?')) {
         try {
-          await axios.delete(`http://localhost:8000/games/${gameId}`, {
-            headers: { Authorization: `Bearer ${store.state.token}` }
-          })
-          message.value = 'Game deleted successfully!'
-          error.value = null
-          await fetchGames()
+          await api.delete(`/games/${gameId}`);
+          message.value = 'Game deleted successfully!';
+          error.value = null;
+          await fetchGames();
         } catch (err) {
-          console.error('Failed to delete game:', err)
-          error.value = err.response && err.response.data && err.response.data.detail
+          console.error('Failed to delete game:', err);
+          error.value = (err.response && err.response.data && err.response.data.detail)
             ? err.response.data.detail
-            : 'Failed to delete game. Please try again.'
-          message.value = null
+            : 'Failed to delete game. Please try again.';
+          message.value = null;
         }
       }
-    }
+    };
 
     onMounted(() => {
-      fetchGames()
-    })
+      fetchGames();
+    });
 
     return {
       games,
@@ -201,9 +187,9 @@ export default {
       isAdmin,
       isEditing,
       showModal
-    }
+    };
   }
-}
+};
 </script>
 
 <style scoped>
