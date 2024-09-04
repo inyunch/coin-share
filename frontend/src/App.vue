@@ -1,26 +1,28 @@
 <template>
   <div id="app">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" v-if="isLoggedIn">
-      <div class="container-fluid">
-        <router-link class="navbar-brand" to="/">Coin Share</router-link>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <router-link class="nav-link" to="/home">Home</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/manage-group">Manage Group</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" to="/manage-game">Manage Game</router-link>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" @click.prevent="logout">Logout</a>
-            </li>
-          </ul>
+    <nav class="navbar" v-if="isLoggedIn">
+      <div class="navbar-container">
+        <router-link to="/" class="navbar-logo">
+          <img src="path/to/your/logo.png" alt="Coin Share Logo" />
+        </router-link>
+        <ul class="navbar-menu">
+          <li class="navbar-item">
+            <router-link to="/home" class="navbar-link">Home</router-link>
+          </li>
+          <li class="navbar-item">
+            <router-link to="/manage-group" class="navbar-link">Manage Group</router-link>
+          </li>
+          <li class="navbar-item">
+            <router-link to="/manage-game" class="navbar-link">Manage Game</router-link>
+          </li>
+        </ul>
+        <div class="navbar-icons">
+          <router-link to="/settings" class="navbar-icon">
+            <i class="fas fa-cog"></i> Settings
+          </router-link>
+          <a href="#" @click.prevent="logout" class="navbar-icon">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </a>
         </div>
       </div>
     </nav>
@@ -49,3 +51,89 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.navbar {
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.navbar-logo img {
+  height: 40px;
+}
+
+.navbar-menu {
+  list-style: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-item {
+  margin-left: 20px;
+}
+
+.navbar-link {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.navbar-link:hover, .navbar-link.router-link-active {
+  color: #007bff;
+}
+
+.navbar-icons {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+.navbar-icon {
+  margin-left: 20px;
+  color: #333;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.navbar-icon:hover {
+  color: #007bff;
+}
+
+@media (max-width: 768px) {
+  .navbar-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar-menu {
+    flex-direction: column;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .navbar-item {
+    margin-left: 0;
+    margin-bottom: 10px;
+  }
+
+  .navbar-icons {
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
+}
+</style>

@@ -4,6 +4,7 @@ import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import ManageGame from '../views/ManageGame.vue'
 import ManageGroup from '../views/ManageGroup.vue'
+import Settings from '../views/Settings.vue'
 import store from '../store'
 
 const routes = [
@@ -24,16 +25,22 @@ const routes = [
     component: Register
   },
   {
-    path: '/manage-game',
-    name: 'ManageGame',
-    component: ManageGame,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/manage-group',
-    name: 'ManageGroup',
-    component: ManageGroup,
-    meta: { requiresAuth: true }
+    path: '/settings',
+    name: 'Settings',
+    component: Settings,
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: 'manage-game',
+        name: 'ManageGame',
+        component: ManageGame
+      },
+      {
+        path: 'manage-group',
+        name: 'ManageGroup',
+        component: ManageGroup
+      }
+    ]
   }
 ]
 

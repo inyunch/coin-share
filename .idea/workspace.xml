@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d78f6b01-d852-4111-baa7-0a150a043b3f" name="Changes" comment="+ modify add game" />
+    <list default="true" id="d78f6b01-d852-4111-baa7-0a150a043b3f" name="Changes" comment="+ modify the crud and ui for managegroup and managegame">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/router/index.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -25,6 +30,9 @@
     &quot;accountId&quot;: &quot;82dc6bfc-bd4a-4ac8-b5b6-de53762bce86&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -39,8 +47,8 @@
     &quot;Python.create_admin.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/User/PycharmProjects/coin-share&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;coverage&quot;
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/User/Downloads/codium-ai-plugin-0.9.4.zip&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
 }</component>
   <component name="PyConsoleOptionsProvider">
@@ -112,24 +120,60 @@
       <option name="project" value="LOCAL" />
       <updated>1725149939595</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="+ modify add game">
+      <option name="closed" value="true" />
+      <created>1725154290282</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1725154290282</updated>
+    </task>
+    <task id="LOCAL-00007" summary="+ modify add game/add group">
+      <option name="closed" value="true" />
+      <created>1725301597822</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1725301597822</updated>
+    </task>
+    <task id="LOCAL-00008" summary="+ modify ManageGame.vue with crud">
+      <option name="closed" value="true" />
+      <created>1725344333616</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1725344333616</updated>
+    </task>
+    <task id="LOCAL-00009" summary="+ modify the crud and ui for managegroup and managegame">
+      <option name="closed" value="true" />
+      <created>1725379586452</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1725379586452</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="+ modify the page style" />
     <MESSAGE value="+ add page &quot;manage game&quot; and &quot;add game&quot;" />
     <MESSAGE value="+ modify login" />
     <MESSAGE value="+ modify add game" />
-    <option name="LAST_COMMIT_MESSAGE" value="+ modify add game" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/backend/app/crud.py</url>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="+ modify add game/add group" />
+    <MESSAGE value="+ modify ManageGame.vue with crud" />
+    <MESSAGE value="+ modify the crud and ui for managegroup and managegame" />
+    <option name="LAST_COMMIT_MESSAGE" value="+ modify the crud and ui for managegroup and managegame" />
   </component>
 </project>
