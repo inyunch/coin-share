@@ -9,12 +9,6 @@
           <li class="navbar-item">
             <router-link to="/home" class="navbar-link">Home</router-link>
           </li>
-          <li class="navbar-item">
-            <router-link to="/manage-group" class="navbar-link">Manage Group</router-link>
-          </li>
-          <li class="navbar-item">
-            <router-link to="/manage-game" class="navbar-link">Manage Game</router-link>
-          </li>
         </ul>
         <div class="navbar-icons">
           <router-link to="/settings" class="navbar-icon">
